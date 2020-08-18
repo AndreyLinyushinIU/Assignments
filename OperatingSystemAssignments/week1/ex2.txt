@@ -1,0 +1,138 @@
+    1  sudo apt update
+    2  sudo apt install make gcc perl
+    3  ./autorun.sh 
+    4  reboot
+    5  man mkdir
+    6  mkdir ~week1
+    7  ls
+    8  mkdir ~/week1
+    9  ls
+   10  cd /week1
+   11  cd ~/week1
+   12  gedit
+   13  gedit &
+   14  jobs
+   15  ls
+   16  cd ~
+   17  ls
+   18  ls > list.txt
+   19  ls
+   20  list.txt
+   21  man head
+   22  head
+   23  man head
+   24  ls
+   25  head list.txt
+   26  head -n 1 list.txt
+   27  head -n 1 < list.txt
+   28  man grep
+   29  grep --help
+   30  ls
+   31  grep -h
+   32  grap -h
+   33  grep --help
+   34  ls
+   35  head -n 20 list.txt
+   36  grep 'Desktop' list.txt
+   37  grep 'i' list.txt
+   38  cat list.txt
+   39  cd ~\week1
+   40  cd ~/week1
+   41  ls
+   42  grep --help
+   43  grep 'gcc' ~/usr/bin
+   44  grep 'gcc' ~/usr/bin/
+   45  cd ~
+   46  ls
+   47  grep 'gcc' /usr/bin
+   48  grep 'gcc' /usr/bin/
+   49  cd /usr
+   50  ls
+   51  cd /bin
+   52  ls
+   53  cd ~
+   54  grep 'gcc' 
+   55  ls
+   56  grep 'gcc' /bin > ~/week1/ex1.txt
+   57  grep 'gcc' /bin/ > ~/week1/ex1.txt
+   58  grep 'gcc' PATTERN  /bin/ > ~/week1/ex1.txt
+   59  grep --help
+   60  ls
+   61  ls > list.txt
+   62  cat list.txt
+   63  cd /bin/
+   64  ls > ~/list.txt
+   65  cat ~/list.txt
+   66  grep 'gcc' ~/list.txt > ~/week1/ex1.txt
+   67  cat ~/week1/ex1.txt
+   68  grep --help
+   69  cd ~
+   70  ls /bin 
+   71  ls /bin | grep 'gcc' | ~/week1/ex1.txt
+   72  ls /bin | grep 'gcc'
+   73  ls /bin | grep 'gcc' > ~/week1/ex1.txt
+   74  ls /bin | grep 'gcc' | sort -r | ~/week1/ex1.txt
+   75  sudo ls /bin | grep 'gcc' | sort -r | ~/week1/ex1.txt
+   76  cat ~/week1/ex1.txt
+   77  man sort
+   78  sudo ls /bin | grep 'gcc' | ~/week1/ex1.txt
+   79  ls /bin | grep 'gcc' | sort -r | ~/week1/ex1.txt
+   80  sudo ls /bin | grep 'gcc' | ~/week1/ex1.txt
+   81  sudo ls /bin | grep 'gcc' | sort -r | ~/week1/ex1.txt
+   82  ~/week1/ex1.txt
+   83  ls
+   84  cd /week1
+   85  cd ~/week1
+   86  cat ex1.txt
+   87  ls /bin | grep 'gcc' | sort -r > ~/week1/ex1.txt
+   88  mkdir ~/week1
+   89  ls /bin | grep 'gcc' | sort -r > ~/week1/ex1.txt
+   90  cat ~/week1/ex1.txt
+   91  ls /bin | grep 'gcc' | sort -r | ~/week1/ex1.txt
+   92  man git
+   93  sudo dpkg -i --force-depends google-chrome-stable_current_amd64.deb
+   94  chrome
+   95  sudo apt install git
+   96  git config
+   97  git config --global user.name "AndreyLinyushinIU"
+   98  git config --global user.email "AndreyLinyushin@yandex.ru"
+   99  git config --list
+  100  ls
+  101  git init
+  102  ls
+  103  git status
+  104  git add week1
+  105  git status
+  106  man ls
+  107  ls
+  108  ls -a
+  109  cd /.git
+  110  cd ~/.git
+  111  cd `
+  112  d
+  113  sd
+  114  exit
+  115  mkdir TestDir
+  116  cd TestDir
+  117  cat test.txt
+  118  echo test.txt
+  119  ls
+  120  touch test.txt
+  121  ls
+  122  mv test.txt newTest.txt
+  123  ls
+  124  rm newTest.txt 
+  125  ls
+  126  cd ..
+  127  ls
+  128  rm TestDir
+  129  man rm
+  130  rm -r TestDir
+  131  ls
+  132  ls | head 2 > stdout
+  133  ls | head -n 2 > stdout
+  134  ls | head -n 2
+  135  hwoami
+  136  whoami
+  137  cd ~/OSAssignments/OperatingSystemAssignments/week1/
+  138  history > ex2.txt
