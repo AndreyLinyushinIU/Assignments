@@ -1,1 +1,1 @@
-date; sleep 3
+date; sleep 3; date
