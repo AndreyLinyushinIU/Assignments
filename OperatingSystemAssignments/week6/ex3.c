@@ -22,7 +22,7 @@ int main () {
 
     while (nProcesses > 0)
         for (int i = 0; i < nProcesses; i++)
-            if (events[i].arrive <= currentTime)
+            if (events[i].arrive <= currentTime) {
                 if (events[i].duration > quantum) {
                     events[i].duration -= quantum;
                     currentTime += quantum;
@@ -32,11 +32,11 @@ int main () {
                     totalWT += currentTime - events[i].arrive - events[i].burst;
                     printf("ID: %d, CT: %d, TAT: %d, WT: %d\n", events[i].ID, currentTime,
                            currentTime - events[i].arrive, currentTime - events[i].arrive - events[i].burst);
-                    for (unsigned int j = i; j < nProcesses-1; j++) events[j] = events[j+1];
+                    for (unsigned int j = i; j < nProcesses - 1; j++) events[j] = events[j + 1];
                     nProcesses--;
                     i--;
                 }
-
+            }
     printf("average TAT: %f, average WT: %f\n", (float)totalTAT/nProcessesInitial, (float)totalWT/nProcessesInitial);
     return 0;
 }
