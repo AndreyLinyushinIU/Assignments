@@ -1,0 +1,4 @@
+1) Virtual memory size can substantially exceed physical memory size
+2) Processes in virtual memory cannot use address space of other processes
+3) Virtual memory pages are mapped to physical memory pages but not in fixed order
+4) Virtual memory can be located not only in RAM but also on disks
