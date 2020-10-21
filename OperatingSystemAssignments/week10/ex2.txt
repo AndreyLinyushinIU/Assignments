@@ -1,0 +1,10 @@
+$ touch file.txt; ls
+_ex1.txt _ex1_1.txt _ex1_2.txt ex1.txt ex2.txt file.txt
+$ ls -i file.txt
+2251799813789595 file.txt
+$ find -inum 2251799813789595
+./file.txt
+./ex2.txt
+$ fund -inum 2251799813789595 -exec rm {} \;
+$ ls
+_ex1.txt _ex1_1.txt _ex1_2.txt ex1.txt ex2.txt
