@@ -1,0 +1,12 @@
+File is 8396800 bytes, block size is 4kb.
+
+I have tested several block size, here are the results obtained:
+1) BLOCK_SIZE = 1024, time taken by the command is approximately 140ms without synchronization and several minutes with it.
+2) BLOCK_SIZE = 4096, time taken by the the command is approximately 54ms without synchronization and 16s with it.
+3) BLOCK_SIZE = 16384, time taken by the command is nearly the same as previousl without sync, however, time with sync decreased.
+
+In the first experiment block size is 4 times less than the system's thus for copying it has to refer to the same page several times that takes time.
+In the second one the default settings are used, each page is referenced only once, therefore the time has decreased.
+In the last experiment time without sync has not decreased significantly because each page is still referenced only once as in in the previous one.
+
+Synchronization takes a lot of time as it causes a lot of system calls to insure that the data is written successfully.
