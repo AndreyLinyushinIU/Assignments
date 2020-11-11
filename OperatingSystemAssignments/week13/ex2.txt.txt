@@ -1,0 +1,19 @@
+Detection and recovery:
+- requires decision for a recovery strategy that may take time
++ a staightforward approach that lets a pcocess to start with no preemtion 
+
+Avoidance:
+- processes' requirements should be known to construct a model for algorithm
++ doesn't interrupt processes execution after they started
+
+Prevention:
+1) Mutual excludion:
+- May cause livelock
++ a straightforward approach - simplicity
+2) Hold and wait:
+- processes' requirements should be known to construct a model for algorithm
++ a process started will not have to request resources - they are already assigned
+3) No preemption:
+- cannot be applied in some cases to specific hardware
+4) Circular wait:
+- cannot be applied in some cases to specific hardware
