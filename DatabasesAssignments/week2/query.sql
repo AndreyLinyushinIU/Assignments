@@ -1,81 +1,75 @@
+--DROP SCHEMA public CASCADE;
+--CREATE SCHEMA public;
+
+--Table of production companies
+CREATE TABLE prodComp (
+	_name text NOT NULL PRIMARY KEY,
+	_address text NOT NULL UNIQUE
+);
+
 --Table of movies
-CREATE TABLE IF NOT EXISTS movie (
-	title text NOT NULL,
+CREATE TABLE movie (
 	_year smallint NOT NULL,
+	_title text NOT NULL,
 	_length smallint NOT NULL,
-	prodComp text NOT NULL,
-	plot text NOT NULL,
-	PRIMARY KEY(title, _year),
-	FOREIGN KEY (prodComp) REFERENCES prodCompMovie(_name)
+	_prodComp text NOT NULL,
+	_outline text,
+	_prodCompName text NOT NULL,
+	PRIMARY KEY (_title, _year),
+	FOREIGN KEY (_prodCompName) REFERENCES prodComp(_name)
 );
 
 --Table of actors
-CREATE TABLE IF NOT EXISTS actor (
+CREATE TABLE actor (
 	_name text NOT NULL,
-	birthdate date NOT NULL,
-	PRIMARY KEY(_name, birthdate)
+	_birthdate date NOT NULL,
+	PRIMARY KEY (_name, _birthdate)
 );
 
 --Table of directors
-CREATE TABLE IF NOT EXISTS director (
+CREATE TABLE director (
 	_name text NOT NULL,
-	birthdate date NOT NULL,
-	PRIMARY KEY(_name, birthdate)
+	_birthdate date NOT NULL,
+	PRIMARY KEY (_name, _birthdate)
 );
 
---Table of production companies
-CREATE TABLE IF NOT EXISTS prodComp (
-	_name text NOT NULL UNIQUE PRIMARY KEY,
-	address text NOT NULL UNIQUE
+--Relation movie->genre
+CREATE TABLE genre (
+	_year smallint NOT NULL,
+	_title text NOT NULL,
+	_genre text NOT NULL,
+	PRIMARY KEY (_title, _year, _genre),
+	FOREIGN KEY (_year, _title) REFERENCES movie(_year, _title)
 );
 
---Relation production company -> movie
-CREATE TABLE IF NOT EXISTS prodCompMovie (
-	_name text NOT NULL PRIMARY KEY,
-	movie text NOT NULL
-);
-
---Relation director -> movies
-CREATE TABLE IF NOT EXISTS directorMovie (
-	_name text NOT NULL PRIMARY KEY,
-	movie text NOT NULL,
-	FOREIGN KEY (movie) REFERENCES movieDirector(title)
-);
-
---Relation movie -> directors
-CREATE TABLE IF NOT EXISTS movieDirector (
-	title text NOT NULL PRIMARY KEY,
-	director text NOT NULL,
-	FOREIGN KEY (title) REFERENCES movie(title)
-);
-
---Relation movie -> genre
-CREATE TABLE IF NOT EXISTS movieGenre (
-	title text NOT NULL PRIMARY KEY,
-	genre text NOT NULL,
-	FOREIGN KEY (title) REFERENCES movie(title)
-);
-
---Relation movie -> actors
-CREATE TABLE IF NOT EXISTS movieActors (
-	title text NOT NULL PRIMARY KEY,
-	actor text NOT NULL,
-	FOREIGN KEY (title) REFERENCES movie(title)
-);
-
---Relation movie -> quotes
-CREATE TABLE IF NOT EXISTS movieQuotes (
-	title text NOT NULL PRIMARY KEY,
+--Relation actor->quote
+CREATE TABLE quotes (
+	_name text NOT NULL,
+	_birthdate date NOT NULL,
 	_quote text NOT NULL,
-	actor text NOT NULL,
-	FOREIGN KEY (title) REFERENCES movie(title),
-	FOREIGN KEY (actor) REFERENCES actor(_name)
+	PRIMARY KEY (_name, _birthdate, _quote),
+	FOREIGN KEY (_name, _birthdate) REFERENCES actor(_name, _birthdate)
 );
 
---Relation actor -> movies
-CREATE TABLE IF NOT EXISTS actorMovies (
-	_name text NOT NULL PRIMARY KEY,
-	movie text NOT NULL,
+--Relation actor<->movie, role
+CREATE TABLE roles (
+	_name text NOT NULL,
+	_birthdate date NOT NULL,
+	_year smallint NOT NULL,
+	_title text NOT NULL,
 	_role text NOT NULL,
-	FOREIGN KEY (movie) REFERENCES movieActors(title)
+	PRIMARY KEY (_name, _birthdate, _year, _title),
+	FOREIGN KEY (_name, _birthdate) REFERENCES actor(_name, _birthdate),
+	FOREIGN KEY (_year, _title) REFERENCES movie(_year, _title)
+);
+
+--Relation director-> movie
+CREATE TABLE directors (
+	_year smallint NOT NULL,
+	_title text NOT NULL,
+	_name text NOT NULL,
+	_birthdate date NOT NULL,
+	PRIMARY KEY (_name, _birthdate, _year, _title),
+	FOREIGN KEY (_name, _birthdate) REFERENCES director(_name, _birthdate),
+	FOREIGN KEY (_year, _title) REFERENCES movie(_year, _title)
 );
