@@ -1,0 +1,4 @@
+In the second task using "EXPLAIN ANALYSE" query it turned out that the most costly
+operation is "IN" (probably it is because of large table size). One of possible
+solutions is to use "JOIN" instead of "IN". Another approach that may increase performance
+is to use indexing.
