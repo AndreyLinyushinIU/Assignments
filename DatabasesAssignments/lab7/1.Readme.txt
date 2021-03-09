@@ -1,0 +1,3 @@
+query.sql	contains a function to be inserted into database
+main.py 	takes addresses, gets longitude and latitude, and creates a new table
+		which is, actually, table "address" with two new columns
