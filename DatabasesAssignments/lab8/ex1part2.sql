@@ -11,8 +11,8 @@ declare
 BEGIN
 UPDATE account SET credit = account.credit - fee WHERE id = sender;
 UPDATE account SET credit = account.credit + fee WHERE id = receiver;
-perform 'select bankname into bank1 from account where id = sender';
-perform 'select bankname into bank2 from account where id = receiver';
+select bankname into bank1 from account where id = sender;
+select bankname into bank2 from account where id = receiver;
 if bank1 <> bank2 then
 	UPDATE account SET credit = account.credit - 30 WHERE id = sender;
 	UPDATE account SET credit = account.credit + 30 WHERE id = 4;
