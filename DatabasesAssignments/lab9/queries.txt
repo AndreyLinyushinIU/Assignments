@@ -1,0 +1,3 @@
+1) db.Restaurants.find({})
+2) db.Restaurants.aggregate({ $project : { restaurant_id : 1, name: 1, borough: 1, cuisine: 1 }});
+3) db.Restaurants.aggregate({ $limit : 5 },  { $project : { borough: "Bronx"} });
