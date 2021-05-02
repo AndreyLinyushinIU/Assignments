@@ -1,0 +1,29 @@
+Return all middle/Walter/light weight fighters (155,170,185) who at least have one win.
+match (f:Fighter) - [:beats] -> (l:Fighter)
+where f.weight = 155 or f.weight = 170 or f.weight = 185
+return f.name
+
+Return fighters who had 1-1 record with each other. Use Count from the aggregation functions.
+match (f:Fighter)-[:beats]->(ff:Fighter),
+      (ff:Fighter)-[:beats]->(f:Fighter)
+return f.name
+
+Return all fighter that can “Khabib Nurmagomedov” beat them and he didn’t have a fight with them yet.
+match (f:Fighter)-[:beats]->(ff:Fighter),
+      (ff:Fighter)-[:beats]->(f:Fighter)
+return f.name
+
+Return undefeated Fighters(0 loss), defeated fighter (0 wins).
+match (f)
+where not ()-[:beats]->(f)
+return distinct f.name
+match (f)
+where not (f)-[]->()
+return distinct f.name
+
+Return all fighters MMA records and create query to enter the record as a property for a fighter {name, weight, record}.
+match (f)
+return f
+match (n {name: 'Kelvin Gastelun'})
+set n.property = 'property'
+return n.name, n.property
