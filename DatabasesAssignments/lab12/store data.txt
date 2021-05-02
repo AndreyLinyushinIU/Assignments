@@ -1,0 +1,11 @@
+import redis
+
+import json
+
+if __name__ == '__main__':
+    data_file = open('data.json')
+    test_data = data_file.read()
+    r = redis.StrictRedis()
+    r.execute_command('JSON.SET', 'object', '.', json.dumps(test_data))
+    reply = json.loads(r.execute_command('JSON.GET', 'object'))
+    data_file.close()
