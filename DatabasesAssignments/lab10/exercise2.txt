@@ -1,0 +1,231 @@
+All comands are executed in order stated in task description but grouped to terminals.
+
+First set of T1 and T2 with read committed isolation:
+
+T1:
+TestIsolation=# SHOW transaction_isolation;
+ transaction_isolation
+-----------------------
+ read committed
+(1 line)
+
+
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |      73 |        2
+(1 line)
+
+
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |      73 |        2
+(1 строка)
+
+
+TestIsolation=*# update account set balance = balance + 15 where group_id = 2;
+UPDATE 1
+TestIsolation=*# commit;
+COMMIT
+TestIsolation=# select * from account;
+ username |    full_name     | balance | group_id
+----------+------------------+---------+----------
+ jones    | Alice Jones      |      82 |        1
+ bitdiddl | Ben Bitdiddle    |      65 |        1
+ alyssa   | Alyssa P. Hacker |      79 |        3
+ bbrown   | Bob Brown        |     100 |        2
+ mike     | Michael Dole     |      88 |        2
+(5 lines)
+
+T2: 
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# update account set group_id = 2 where username = 'bbrown';
+UPDATE 1
+TestIsolation=*# commit;
+COMMIT
+
+Changes are applied only after T2 commits the transaction.
+
+
+
+
+
+
+First set of T1 and T2 with repeatable read isolation:
+T1:
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# set transaction isolation level repeatable read;
+SET
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |      73 |        2
+(1 line)
+
+
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |      73 |        2
+(1 line)
+
+
+TestIsolation=*# update account set balance = balance + 15 where group_id = 2;
+UPDATE 1
+TestIsolation=*# commit;
+COMMIT
+
+T2:
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# set transaction isolation level repeatable read;
+SET
+TestIsolation=*# update account set group_id = 2 where username = 'bbrown';
+UPDATE 1
+TestIsolation=*# commit;
+COMMIT
+TestIsolation=# select * from account;
+ username |    full_name     | balance | group_id
+----------+------------------+---------+----------
+ jones    | Alice Jones      |      82 |        1
+ bitdiddl | Ben Bitdiddle    |      65 |        1
+ alyssa   | Alyssa P. Hacker |      79 |        3
+ bbrown   | Bob Brown        |     100 |        2
+ mike     | Michael Dole     |      88 |        2
+(5 lines)
+
+The result is absolutely similar to read committed isolation as
+repeatable read provides even higher isolation.
+
+
+
+
+
+
+
+Second set of T1 and T2 with repeatable read isolation:
+T1:
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# set transaction isolation level repeatable read;
+SET
+TestIsolation=*# select sum(balance) from account where group_id = 2;
+ sum
+-----
+  73
+(1 line)
+
+
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |      73 |        2
+(1 line)
+
+
+TestIsolation=*#
+TestIsolation=*# update account set balance = balance + 73 where group_id = 2;
+UPDATE 1
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |     146 |        2
+(1 line)
+
+
+TestIsolation=*# commit;
+COMMIT
+TestIsolation=# select * from account;
+ username |    full_name     | balance | group_id
+----------+------------------+---------+----------
+ jones    | Alice Jones      |      82 |        1
+ bitdiddl | Ben Bitdiddle    |      65 |        1
+ alyssa   | Alyssa P. Hacker |      79 |        3
+ bbrown   | Bob Brown        |     100 |        2
+ mike     | Michael Dole     |     146 |        2
+(5 lines)
+
+T2:
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# set transaction isolation level repeatable read;
+SET
+TestIsolation=*# update account set group_id = 2 where username = 'bbrown';
+UPDATE 1
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |      73 |        2
+ bbrown   | Bob Brown    |     100 |        2
+(2 lines)
+
+
+TestIsolation=*# commit;
+COMMIT
+
+As T1 cannot see uncommitted changes, it updates only 1 record by + 73.
+
+
+
+
+
+
+
+Second set of T1 and T2 with serializable isolation:
+T1:
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# set transaction isolation level serializable;
+SET
+TestIsolation=*# select sum(balance) from account where group_id = 2;
+ sum
+-----
+  73
+(1 line)
+
+
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |      73 |        2
+(1 line)
+
+
+TestIsolation=*# update account set balance = balance + 73 where group_id = 2;
+UPDATE 1
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |     146 |        2
+(1 line)
+
+
+TestIsolation=*# commit;
+COMMIT
+
+T2:
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# set transaction isolation level serializable;
+SET
+TestIsolation=*# update account set group_id = 2 where username = 'bbrown';
+UPDATE 1
+TestIsolation=*# select * from account where group_id = 2;
+ username |  full_name   | balance | group_id
+----------+--------------+---------+----------
+ mike     | Michael Dole |      73 |        2
+ bbrown   | Bob Brown    |     100 |        2
+(2 lines)
+
+
+TestIsolation=*# commit;
+ОШИБКА:  не удалось сериализовать доступ из-за зависимостей чтения/записи между транзакциями
+ПОДРОБНОСТИ:  Reason code: Canceled on identification as a pivot, during commit attempt.
+ПОДСКАЗКА:  Транзакция может завершиться успешно при следующей попытке.
+
+An error is displayed when attempting to commit because scheduler was unable to serialize both commits.

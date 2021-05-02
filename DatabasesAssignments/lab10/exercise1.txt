@@ -1,0 +1,92 @@
+All comands are executed in order stated in task description but grouped to terminals.
+
+
+T1:
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# set transaction isolation level read uncommitted;
+SET
+TestIsolation=*# select * from account;
+ username |    full_name     | balance | group_id
+----------+------------------+---------+----------
+ jones    | Alice Jones      |      82 |        1
+ bitdiddl | Ben Bitdiddle    |      65 |        1
+ mike     | Michael Dole     |      73 |        2
+ alyssa   | Alyssa P. Hacker |      79 |        3
+ bbrown   | Bob Brown        |     100 |        3
+(5 lines)
+
+
+TestIsolation=*# select * from account;
+ username |    full_name     | balance | group_id
+----------+------------------+---------+----------
+ jones    | Alice Jones      |      82 |        1
+ bitdiddl | Ben Bitdiddle    |      65 |        1
+ mike     | Michael Dole     |      73 |        2
+ alyssa   | Alyssa P. Hacker |      79 |        3
+ bbrown   | Bob Brown        |     100 |        3
+(5 lines)
+
+T2:
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# set transaction isolation level read uncommitted;
+SET
+TestIsolation=*# update account set username = 'ajones' where full_name = 'Alice Jones';
+UPDATE 1
+TestIsolation=*# select * from account;
+ username |    full_name     | balance | group_id
+----------+------------------+---------+----------
+ bitdiddl | Ben Bitdiddle    |      65 |        1
+ mike     | Michael Dole     |      73 |        2
+ alyssa   | Alyssa P. Hacker |      79 |        3
+ bbrown   | Bob Brown        |     100 |        3
+ ajones   | Alice Jones      |      82 |        1
+(5 lines)
+
+The ouput is the same for both terminals because PostgreSQL does not allow dirty reads.
+
+T2:
+TestIsolation=*# commit;
+COMMIT
+TestIsolation=# select * from account;
+ username |    full_name     | balance | group_id
+----------+------------------+---------+----------
+ bitdiddl | Ben Bitdiddle    |      65 |        1
+ mike     | Michael Dole     |      73 |        2
+ alyssa   | Alyssa P. Hacker |      79 |        3
+ bbrown   | Bob Brown        |     100 |        3
+ ajones   | Alice Jones      |      82 |        1
+(5 lines)
+
+T1:
+TestIsolation=*# select * from account;
+ username |    full_name     | balance | group_id
+----------+------------------+---------+----------
+ bitdiddl | Ben Bitdiddle    |      65 |        1
+ mike     | Michael Dole     |      73 |        2
+ alyssa   | Alyssa P. Hacker |      79 |        3
+ bbrown   | Bob Brown        |     100 |        3
+ ajones   | Alice Jones      |      82 |        1
+(5 lines)
+
+The username for Alice Jones has changed to 'ajones' because of a commit.
+
+T2:
+TestIsolation=# begin;
+BEGIN
+TestIsolation=*# update account set balance = balance + 20 where full_name = 'Alice Jones';
+
+T1:
+TestIsolation=*# select * from account;
+ username |    full_name     | balance | group_id
+----------+------------------+---------+----------
+ bitdiddl | Ben Bitdiddle    |      65 |        1
+ mike     | Michael Dole     |      73 |        2
+ alyssa   | Alyssa P. Hacker |      79 |        3
+ bbrown   | Bob Brown        |     100 |        3
+ ajones   | Alice Jones      |     112 |        1
+(5 lines)
+
+The amount for Alice's balance has changed to 82 + 10 + 20 because update query in T2 waits
+until T1 commits, and right after that second immediate commit happens.
